@@ -10,12 +10,22 @@ initialcolors = np.zeros(n*n)
 phased_lattice = ColorNNetwork(initialcolors, lattice)
 
 # start simulations
-coupling_constant = 2
+coupling_constant = 1.33
 a = simulate_Kuramoto(phased_lattice, coupling_constant, 
-        T=200, step=0.1, verbose=True) 
-print(np.max(a),np.min(a))
-print(len(a[np.abs(np.asarray(a))>np.pi]))
+        T=30, step=0.2, verbose=True) 
 # create animations
 lattice2D_mkgif(a, n=n, name="kura50_"+str(coupling_constant), freeze=True,
-        duration=5,pickcol='inferno')
+        duration=3,pickcol='inferno')
 
+#n=100
+#lattice = edgeset_generator([n,n], show=False)
+#initialcolors = np.zeros(n*n)
+#phased_lattice = ColorNNetwork(initialcolors, lattice)
+#
+## start simulations
+#coupling_constant = 1
+#a = simulate_Kuramoto(phased_lattice, coupling_constant, 
+#        T=3000, step=0.1, verbose=True) 
+## create animations
+#lattice2D_mkgif(a, n=n, name="kura50_"+str(coupling_constant), freeze=True,
+#        duration=3,pickcol='inferno')

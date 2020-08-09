@@ -131,8 +131,7 @@ def simulate_Kuramoto(G, K, T=10000, step=0.02, verbose=True,
                 )
         new = F.get_color(vertex) + step * fprime
         if np.abs(new) > np.pi:
-            #print("slip")
-            return np.mod(new, np.pi)
+            return np.mod(new, 2*np.pi)
         return new
 
     its = int(T/step)
@@ -341,17 +340,17 @@ def lattice3D_mkgif(colors_it, dim, name="Lattice3D",
 
     def make_gif(a,b,c,d,angle): 
         ax = plt.gca(projection='3d')
-        ax.set_facecolor("black")
+        ax.set_facecolor("grey")
         plt.axis('off')
         ax.scatter(a.ravel(),
                    b.ravel(),
                    c.ravel(),
                    c=d,
                    cmap=col,
-                   s=10, alpha=0.3, vmin=-np.pi,vmax=np.pi)
-        ax.view_init(45,(angle/4)%360)
+                   s=10, alpha=0.2, vmin=-np.pi,vmax=np.pi)
+        ax.view_init(45,(angle/32)%360)
         buf = io.BytesIO()
-        plt.savefig(buf, format='png')
+        plt.savefig(buf, format='png', bbox_inches='tight')
         plt.clf()
         buf.seek(0)
         im = Image.open(buf)
