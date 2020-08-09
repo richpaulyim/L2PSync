@@ -119,19 +119,19 @@ def simulate_Kuramoto(G, K, T=10000, step=0.02, verbose=True,
     if T==0:
         T=its
         its=False
+    omega = np.random.normal(0,1,F.num_nodes())
     
     # update rule for given vertex
     def euler_update(vertex):
         vertexcolor = F.get_color(vertex)
-        omega = np.random.normal()
-        fprime = omega + K * np.sum(
+        fprime = omega[vertex] + K * np.sum(
                 np.sin(
                     np.asarray(F.get_neighbor_colors(vertex))-vertexcolor
                     )
                 )
         new = F.get_color(vertex) + step * fprime
         if np.abs(new) > np.pi:
-            print("slip")
+            #print("slip")
             return np.mod(new, np.pi)
         return new
 
@@ -297,11 +297,10 @@ def lattice2D_mkgif(colors_it, n, name="Lattice2D",
         col=pickcol
     else:
         col = random.sample(fun_colors,1)[0]
-    vi = np.min(colors_it)
-    va = np.max(colors_it)
+    print(col)
 
     def make_gif(frame): 
-        plt.pcolormesh(frame,vmin=vi,vmax=va, cmap=col)
+        plt.pcolormesh(frame,vmin=-np.pi,vmax=np.pi, cmap=col)
         plt.axis('square')
         plt.axis('off')
         buf = io.BytesIO()
@@ -329,3 +328,54 @@ def lattice2D_mkgif(colors_it, n, name="Lattice2D",
     images[0].save(name+'.gif', save_all=True, 
                     append_images=tail, optimize=False, duration=duration, loop=0)
 
+
+def lattice3D_mkgif(colors_it, dim, name="Lattice3D",
+        duration=200, blinkonly=False, interval=4, holdframes=0,pickcol=0):
+    images = []
+    col = random.sample(fun_colors,1)[0]
+    if pickcol:
+        col=pickcol
+    else:
+        col = random.sample(fun_colors,1)[0]
+    print(col)
+
+    def make_gif(a,b,c,d,angle): 
+        ax = plt.gca(projection='3d')
+        ax.set_facecolor("black")
+        plt.axis('off')
+        ax.scatter(a.ravel(),
+                   b.ravel(),
+                   c.ravel(),
+                   c=d,
+                   cmap=col,
+                   s=10, alpha=0.3, vmin=-np.pi,vmax=np.pi)
+        ax.view_init(45,(angle/4)%360)
+        buf = io.BytesIO()
+        plt.savefig(buf, format='png')
+        plt.clf()
+        buf.seek(0)
+        im = Image.open(buf)
+        images.append(im)
+
+    # Starting generating frames
+    a = []
+    for i, colors in enumerate(tqdm(colors_it)):
+        volume = np.reshape(colors, (dim,dim,dim))
+        xi = np.arange(volume.shape[0])[:, None, None]
+        x = np.arange(volume.shape[0])[:, None, None]
+        y = np.arange(volume.shape[1])[None, :, None]
+        z = np.arange(volume.shape[2])[None, None, :]
+        x, y, z = np.broadcast_arrays(x, y, z)
+        c = np.tile(volume.ravel()[:, None], 1) 
+ 
+
+        # Add frame
+        make_gif(x,y,z,c,i)
+
+    images.extend([images[-1]] * holdframes)
+
+    # create the gif
+    tail = images[1:]
+    images[0].save(name+'.gif', save_all=True, 
+                    append_images=tail, 
+                    optimize=False, duration=duration, loop=0)
