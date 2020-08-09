@@ -130,6 +130,9 @@ def simulate_Kuramoto(G, K, T=10000, step=0.02, verbose=True,
                     )
                 )
         new = F.get_color(vertex) + step * fprime
+        if np.abs(new) > np.pi:
+            print("slip")
+            return np.mod(new, np.pi)
         return new
 
     its = int(T/step)
@@ -139,15 +142,6 @@ def simulate_Kuramoto(G, K, T=10000, step=0.02, verbose=True,
         F.set_colors(new_col)
         current_colors.append(new_col)
     return np.stack(current_colors,axis=0)
-
-
-def width_compute(coloring, kappa):
-    differences = [np.max(coloring) - np.min(coloring)]
-    for j in range(1,kappa+1):
-        shifted = (np.array(coloring) + j) % kappa
-        differences.append(np.max(shifted) - np.min(shifted))
-    #print(np.min(differences))
-    return np.min(differences)
 
 
 # ----------------------------#
@@ -180,22 +174,6 @@ def grapher(colors, edges, cs, animate):
     nx.draw_networkx_labels(G, pos, labels)
     plt.axis('off')
     
-    
-# --------------------------- #
-# Edge list generators
-# --------------------------- #
-#layers indicate how many layers you want past the initial star. so layers = 1 makes 1 layer past the parents children
-def star(children, layers):
-    edgelist = []; count = 0
-    for i in range(1, children+1):
-        edgelist.append([0, i])
-        count += 1
-    for l in range(0, layers): 
-        for j in range(children*l, children*l + children):
-            edgelist.append([edgelist[j][1], count + 1])
-            count += 1
-    return edgelist
-
 def edgeset_generator(dims, type='lattice', verbose=True, show=True,
         linegraphtoo=False):
     #lattice grapher
@@ -220,7 +198,7 @@ def edgeset_generator(dims, type='lattice', verbose=True, show=True,
     elif type == 'cycle':
         edgeset = nx.cycle_graph(dims[0])
         if verbose: print('cycle generated')
-    elif type == 'nwg':
+    elif type == 'nwg': 
         edgeset = nx.newman_watts_strogatz_graph(dims[0], dims[1], dims[2])
         if verbose: print('Connected Watts Strogatz graph generated.')
     elif type == 'torus':
@@ -311,15 +289,19 @@ def width(colors, kappa):
             widths.append(ordered[i+1]-ordered[i])
         return kappa - max(widths)
 
-col = random.sample(fun_colors,1)[0]
 def lattice2D_mkgif(colors_it, n, name="Lattice2D",
-        freeze=False, cap=100000, duration=100):
-    vma = np.max(colors_it)
-    vmi = np.min(colors_it)
+        freeze=False, cap=100000, duration=100,pickcol=0):
     v = n
     images = []
+    if pickcol:
+        col=pickcol
+    else:
+        col = random.sample(fun_colors,1)[0]
+    vi = np.min(colors_it)
+    va = np.max(colors_it)
+
     def make_gif(frame): 
-        plt.pcolormesh(frame,vmin=vmi,vmax=vma, cmap=col)
+        plt.pcolormesh(frame,vmin=vi,vmax=va, cmap=col)
         plt.axis('square')
         plt.axis('off')
         buf = io.BytesIO()
