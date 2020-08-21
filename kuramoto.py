@@ -108,7 +108,7 @@ class ColorNNetwork(NNetwork.NNetwork):
 # --------------------------- #
 # Kuramoto Implementation 
 # --------------------------- #
-def simulate_Kuramoto(G, K, T=10000, step=0.02, verbose=True,  
+def simulate_Kuramoto(G, K, T=10000, step=0.05, verbose=True,  
             timesec=30, gifduration=200):
     """
     Function that returns edgelist color changes for FCA
@@ -130,8 +130,12 @@ def simulate_Kuramoto(G, K, T=10000, step=0.02, verbose=True,
                     )
                 )
         new = F.get_color(vertex) + step * fprime
+        #if np.abs(new) > np.pi:
+        #    return np.mod(new, 2*np.pi)
         if np.abs(new) > np.pi:
             return np.mod(new, 2*np.pi)
+        #elif new < 0:
+        #    return np.mod(new, 2*np.pi)
         return new
 
     its = int(T/step)
