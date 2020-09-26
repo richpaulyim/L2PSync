@@ -108,8 +108,8 @@ class ColorNNetwork(NNetwork.NNetwork):
 # --------------------------- #
 # Kuramoto Implementation 
 # --------------------------- #
-def simulate_Kuramoto(G, K, T=10000, step=0.05, verbose=True,  
-            timesec=30, gifduration=200):
+def simulate_Kuramoto(G, K, T=10000, step=0.05, kappa=5, verbose=True,  
+            timesec=30, gifduration=200, intrinsic=True, fixed=0, rounded=False):
     """
     Function that returns edgelist color changes for FCA
     Useful for visualization
@@ -119,7 +119,15 @@ def simulate_Kuramoto(G, K, T=10000, step=0.05, verbose=True,
     if T==0:
         T=its
         its=False
-    omega = np.random.normal(0,1,F.num_nodes())
+    if intrinsic:
+        print('frequency random')
+        omega = np.random.uniform(-np.pi,np.pi,F.num_nodes())
+    elif fixed:
+        if verbose: print('frequency fixed')
+        omega = np.repeat(fixed, F.num_nodes())
+    else:
+        if verbose: print('no frequency')
+        omega = np.zeros(F.num_nodes())
     
     # update rule for given vertex
     def euler_update(vertex):
@@ -134,17 +142,28 @@ def simulate_Kuramoto(G, K, T=10000, step=0.05, verbose=True,
         #    return np.mod(new, 2*np.pi)
         if np.abs(new) > np.pi:
             return np.mod(new, 2*np.pi)
-        #elif new < 0:
-        #    return np.mod(new, 2*np.pi)
         return new
+
+    # update to number of states 
+    def disretize(vertices):
+        return np.round(vertices,1) * 10
 
     its = int(T/step)
     current_colors = [F.get_colors()]
     for i in trange(its, disable=not verbose):
         new_col = np.fromiter(map(euler_update, range(0,F.num_nodes())), float)
         F.set_colors(new_col)
-        current_colors.append(new_col)
-    return np.stack(current_colors,axis=0)
+        if rounded:
+            bins = np.linspace(-np.pi,np.pi,kappa)
+            #mapped = np.floor((new_col + np.pi) * kappa / (2 * np.pi))
+            mapped = np.digitize(new_col, bins)
+            current_colors.append(mapped)
+        else:
+            current_colors.append(np.mod(new_col, 2*np.pi))
+
+    if all(current_colors[-1]==current_colors[-1][0]):
+        return (np.stack(current_colors,axis=0), 1)
+    return (np.stack(current_colors,axis=0), 0)
 
 
 # ----------------------------#
@@ -293,7 +312,7 @@ def width(colors, kappa):
         return kappa - max(widths)
 
 def lattice2D_mkgif(colors_it, n, name="Lattice2D",
-        freeze=False, cap=100000, duration=100,pickcol=0):
+        freeze=False, cap=1000, duration=100,pickcol=0):
     v = n
     images = []
     if pickcol:
@@ -315,8 +334,8 @@ def lattice2D_mkgif(colors_it, n, name="Lattice2D",
 
     # Starting generating frames
     for i, colors in enumerate(tqdm(colors_it)):
-        #if i > cap:
-        #    break
+        if i > cap:
+            break
         a = np.reshape(np.asarray(colors_it), (np.shape(colors_it)[0], n, n))
         # Add frame
         make_gif(a[i])
