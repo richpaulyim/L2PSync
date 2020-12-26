@@ -3,12 +3,9 @@
 This is the repository for the paper "Learning to Predict Synchronization of
 Coupled Oscillators on Heterogeneous Graphs" by Hardeep Bassi, Richard Yim, Joshua Vendrow, Rohith Koduluka, Cherlin Zhu and Hanbaek Lyu.
 
-## Included Folders 
+# Included Folders 
 
-Note: Each folder contains a dedicated README markdown file detailing
-instructions on generating data, using scripts and training/testing models.
-
-### ml-models
+## ml-models
 
 (graph-lrcn)
 - `GraphLRCN.py` - contains model implementation used for LRCN.
@@ -26,7 +23,7 @@ instructions on generating data, using scripts and training/testing models.
 - `gradientboost.py` - gradient boosting model and training script
 - `random_forest.py` - random forest model and training script
 
-### simulation-data
+## simulation-data
 
 (main)
 - `firefly.py` - FCA simulation code and additional functions for generating
@@ -38,10 +35,10 @@ instructions on generating data, using scripts and training/testing models.
 instructions below)
 
 (LRCN-datagen)
-- `OmegaDynamicsKURA.py` - Script for creating omega matrices for Kuramoto data
+- `OmegaDynamicsKURA.py` - Script for creating omega matrices for Graph LRCN on Kuramoto data
   (.npy)
-- `OmegaFCA.py` - Script for creating omega matrices for FCA data (.npy)
-- `OmegaGH.py` - Script for creating omega matrices for Greenberg-Hastings data
+- `OmegaFCA.py` - Script for creating omega matrices for Graph LRCN on FCA data (.npy)
+- `OmegaGH.py` - Script for creating omega matrices for Graph LRCN on Greenberg-Hastings data
   (.npy)
 
 (subgraphs-datagen)
@@ -54,11 +51,22 @@ instructions below)
 
 ## Instructions for Generating Graph-Initial-Dynamics Pairs
 
-1. 
-2.
-3.
-4.
+1. Lines 20-24: insert sync/nonsync limits. `AMOUNT_ITS` is the number of
+   dynamics iterations to be recorded. `ACCESS_KEY` and `SECRET_KEY` are the AWS
+keys used, and are optional for recording actual data to machine.
+2. Lines 120-130: insert information related to node count, k for kappa coloring
+   when using discrete models, as well as number of iterations as upper bound of
+number iterations to be run. 
+3. Line 154: set `overshoot` to desired number of graphs to test simulations on
+4. Line 155 (loop): defined `pnorm` parameters and `edgesetN` for number of NWS
+   functions calls (this can be modified at user discretion)
+5. Line 178: define `colperg` as number of initial colorings to simulate per
+   graph.
+6. Line 181 and 186: define whether the model is continuous or not to generate
+   initial states of graphs; then define `mod` corresponding simulation to use
+depending on your model, {FCA,GH,KM}.
+7. User must decide whether to write to AWS S3 bucket or write to local; the
+   latter option requires user to generate her own script.
 
 ### For further inquiries email:
-Hardeep Bassi: hbassi21@gmail.com
-Richard Yim: richyim555@g.ucla.edu
+Hardeep Bassi (hbassi21@gmail.com) and Richard Yim (richyim555@g.ucla.edu)

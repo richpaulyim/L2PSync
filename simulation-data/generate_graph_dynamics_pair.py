@@ -121,11 +121,10 @@ def datagen():
     Set your own default parameters
     """
     name = ''
-    num_colors = 300
-    check = nx.empty_graph(300)
     # hard-coded parameters
     kappa = 5
     n = 300
+    check = nx.empty_graph(n)
     its = 1000
     inds = []
     # counters
@@ -133,8 +132,7 @@ def datagen():
     sl = 0
 
        # file writing
-    syncFile = StringIO()
-    sf = csv.writer(syncFile, delimiter=',')
+    syncFile = StringIO() sf = csv.writer(syncFile, delimiter=',')
     #colorFile = open(name + "/" + name + '_color.csv','w')
     colorFile = StringIO()
     cf = csv.writer(colorFile, delimiter=",")
@@ -153,23 +151,21 @@ def datagen():
 
 
     # on-the-fly running and simulation
-    for i,j in enumerate(trange(1000000)):
+    overshoot = 1_000_000
+    for i,j in enumerate(trange(overshoot)):
         print("=======================")
         print("nonsync and sync counts")
         print(nsl,sl)
         print("=======================")
 
         # probability for graph density
-        # puniform = random.random() * 0.3 + .32
-        # pnorm = normal(puniform, 0.04)
         pnorm = 0.6
         # creating graph
         KAPPA = kappa
-        edgesetN 5
+        edgesetN = 5
         edgeset = []
         for i in range(edgesetN):
             edgeset = edgeset + edgeset_generator([n, 2, pnorm],type="nwg",show=0, verbose=False)
-        #import pdb; pdb.set_trace()
         G = nx.Graph()
         G.add_edges_from(edgeset)
         print('Amount of edges:', len(set([frozenset(o) for o in edgeset])))
@@ -179,17 +175,25 @@ def datagen():
         if nx.is_isomorphic(G, check): continue
         check = G
    
- 
-        for i in trange(10):
+        colperg = 10
+        for i in trange(colperg):
             # creating initial colored graph
-            colorlist = np.random.randint(0,kappa,size=n) 
-            #colorlist = np.random.uniform(-np.pi, np.pi, len(G.nodes))
-            #print(colorlist)
+            continuous = True
+            if continuous: 
+                colorlist = np.random.randint(0,kappa,size=n) 
+            else:
+                colorlist = np.random.uniform(-np.pi, np.pi, len(G.nodes))
             f = ColorNNetwork(colorlist, G.edges)
 
             # run simulation
-            sim = basic_FCA(f, KAPPA, its=its, verbose=False, no_edges=True) 
-            #sim = simulate_Kuramoto(f, 2, intrinsic=False, widthcheck=True, verbose=False)
+            mod = 0:
+            if mod==1:
+                sim = basic_FCA(f, KAPPA, its=its, verbose=False, no_edges=True) 
+            elif mod==2:
+                sim = simulate_GH(f, KAPPA, its=its, verbose=False, no_edges=True) 
+            else:
+                sim = simulate_Kuramoto(f, 2, intrinsic=False, widthcheck=True, verbose=False)
+
             fake_color = 1
             if len(sim[3]) < AMOUNT_ITS:
                 while len(sim[3]) < AMOUNT_ITS:
@@ -267,7 +271,7 @@ def datagen():
                 return nx.number_of_nodes(graph)
 
             def amount_colors(coloring):
-                return num_colors
+                return n
 
             def get_degree(nodelist):
                 return node.degree
