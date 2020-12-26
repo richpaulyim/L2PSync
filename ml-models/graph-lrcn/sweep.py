@@ -5,7 +5,7 @@ rates = (1/2.75)**np.arange(3,6)
 
 # read partition data
 perm = np.random.permutation(200000) 
-with open('../OmegaKURA.npy', 'rb') as f:
+with open('../deltaKURA.npy', 'rb') as f:
     datain = np.load(f, allow_pickle=True)[perm,:,:,:]
     dataout = np.load(f)[perm]
 # slice training data 

@@ -13,6 +13,7 @@ from scipy.sparse.csgraph import reverse_cuthill_mckee
 #path = 'C:/Users/hbass/Desktop/fca/FCA-ML/adjacency-dynamics/'
 path="/mnt/l/home/kura30/"
 path="/mnt/l/home/fca30/"
+path="/mnt/l/home/gh30/"
 
 # read initial coloring, labels, indices and graph6
 coloring = pd.read_csv(path+'color.csv', 
@@ -51,7 +52,7 @@ def width(colors, kappa):
             widths.append(ordered[i+1]-ordered[i])
         return kappa - max(widths)
 
-def omega_buildmatrices():
+def delta_buildmatrices():
     cols = []; kappa = 5; its = 24; ind = []
     # run simulations
     print("===================")
@@ -64,10 +65,12 @@ def omega_buildmatrices():
         edgelist = list(graphs[int(j)].edges)
         colorlist = coloring[j][0][1:]
         net = ColorNNetwork(colorlist.tolist(), edgelist)
-        coldyn = simulate_FCA(net, kappa, its=its, timesec=60, verbose=0)[0]
+        coldyn = simulate_dynamics(net, kappa, its=its, timesec=60, verbose=0)[3]
         s = dataout[int(j)]
         if count:
             if s:
+                _ = [print(m) for m in coldyn]
+                print("----------")
                 if sl>=100:
                     pass
                 else:
@@ -145,33 +148,18 @@ def omega_buildmatrices():
 
             if sl > 100 and nsl > 100:
                 break
+
     print(len(adjmatssl), len(dataynsl))
     print(len(adjmatsnsl), len(dataysl))
 
     #datain = np.stack(adjmats, axis=0)
 
     # save results
-    with open(path+'Omega.npy', 'wb') as f:
+    with open(path+'delta.npy', 'wb') as f:
         np.save(f, adjmatssl)
         np.save(f, dataysl)
         np.save(f, adjmatsnsl)
         np.save(f, dataynsl)
 
 
-omega_buildmatrices()
-
-#with open('LRCN-Data/Omega.npy','rb') as f:
-#    datain = np.load(f, allow_pickle=True)
-#    dataout = np.load(f) 
-#import sys
-#import numpy
-#numpy.set_printoptions(threshold=sys.maxsize)
-##print(datain[0])
-#
-#gifmake(datain[0]/4, "omega0a", kappa=False, duration=150)
-#gifmake(datain[1]/4, "omega0b", kappa=False, duration=150)
-#
-#gifmake(datain[-1]/4, "omega1c", kappa=False, duration=150)
-#gifmake(datain[-2]/4, "omega1d", kappa=False, duration=150)
-#print(datain[-1])
-#
+delta_buildmatrices()

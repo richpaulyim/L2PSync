@@ -52,7 +52,7 @@ def width(colors, kappa):
             widths.append(ordered[i+1]-ordered[i])
         return kappa - max(widths)
 
-def omega_buildmatrices():
+def delta_buildmatrices():
     cols = []; kappa = 5; its = 24; ind = []
     # run simulations
     print("===================")
@@ -153,27 +153,12 @@ def omega_buildmatrices():
     #datain = np.stack(adjmats, axis=0)
 
     # save results
-    with open(path+'Omega.npy', 'wb') as f:
+    with open(path+'delta.npy', 'wb') as f:
         np.save(f, adjmatssl)
         np.save(f, dataysl)
         np.save(f, adjmatsnsl)
         np.save(f, dataynsl)
 
 
-omega_buildmatrices()
+delta_buildmatrices()
 
-#with open('LRCN-Data/Omega.npy','rb') as f:
-#    datain = np.load(f, allow_pickle=True)
-#    dataout = np.load(f) 
-#import sys
-#import numpy
-#numpy.set_printoptions(threshold=sys.maxsize)
-##print(datain[0])
-#
-#gifmake(datain[0]/4, "omega0a", kappa=False, duration=150)
-#gifmake(datain[1]/4, "omega0b", kappa=False, duration=150)
-#
-#gifmake(datain[-1]/4, "omega1c", kappa=False, duration=150)
-#gifmake(datain[-2]/4, "omega1d", kappa=False, duration=150)
-#print(datain[-1])
-#

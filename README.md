@@ -35,10 +35,10 @@ Coupled Oscillators on Heterogeneous Graphs" by Hardeep Bassi, Richard Yim, Josh
 instructions below)
 
 (LRCN-datagen)
-- `OmegaDynamicsKURA.py` - Script for creating omega matrices for Graph LRCN on Kuramoto data
+- `DeltaKM.py` - Script for creating omega matrices for Graph LRCN on Kuramoto data
   (.npy)
-- `OmegaFCA.py` - Script for creating omega matrices for Graph LRCN on FCA data (.npy)
-- `OmegaGH.py` - Script for creating omega matrices for Graph LRCN on Greenberg-Hastings data
+- `DeltaFCA.py` - Script for creating omega matrices for Graph LRCN on FCA data (.npy)
+- `DeltaGH.py` - Script for creating omega matrices for Graph LRCN on Greenberg-Hastings data
   (.npy)
 
 (subgraphs-datagen)

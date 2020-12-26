@@ -73,7 +73,7 @@ def trainandsave(datain, dataout, selection, seq_length, figurename,
             datain = np.load(f, allow_pickle=True)[perm,:seq_length,:,:]
             dataout = np.load(f)[perm]
     if selection==4:
-        with open('../LRCN-Data/Omega.npy', 'rb') as f:
+        with open('../LRCN-Data/delta.npy', 'rb') as f:
             datain = np.load(f, allow_pickle=True)[perm,1:(seq_length+1),:,:]
             dataout = np.load(f)[perm]
 
@@ -125,7 +125,7 @@ if __name__ == '__main__':
     if train:
         # read partition data
         perm = np.random.permutation(160000) 
-        with open('../OmegaKURA.npy', 'rb') as f:
+        with open('../DeltaKURA.npy', 'rb') as f:
             #datain = np.load(f, allow_pickle=True)[perm,:23,:,:]
             datain = np.load(f, allow_pickle=True)
             print(datain.shape)
@@ -143,7 +143,7 @@ if __name__ == '__main__':
             # train and save the model
             training = X[:,:i,:,:]
             trainX = np.reshape(training, (y.shape[0],i,15,15,1))
-            vals.append(trainandsave(trainX, y, 1, i, 'OmegaKURA', 3, False))
+            vals.append(trainandsave(trainX, y, 1, i, 'DeltaKURA', 3, False))
 
         # save results
         with open('differentialKURALRCN_addon.npy', 'wb') as f:
@@ -196,7 +196,7 @@ if __name__ == '__main__':
         print("------------------------------")
 
         # old function calls
-        #trainandsave(4, 9, 'Omega')
+        #trainandsave(4, 9, 'Delta')
         #trainandsave(3, 10, 'LowerUpper')
         #trainandsave(2, 10, 'LineConv')
 
