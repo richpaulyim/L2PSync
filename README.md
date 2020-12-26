@@ -5,18 +5,42 @@ Coupled Oscillators on Heterogeneous Graphs" by Hardeep Bassi, Richard Yim, Josh
 
 ## Included Folders 
 
+Note: Each folder contains a dedicated README markdown file detailing
+instructions on generating data, using scripts and training/testing models.
+
 ### ml-models
 
-- `GraphLRCN.py`, 
-- `GraphLRCN_train.py`, 
-- `sweep.py`,
+(graph-lrcn)
+- `GraphLRCN.py` - contains model implementation used for LRCN.
+- `GraphLRCN_train.py` - contains training script applying `GraphLRCN` model
+- `sweep.py` - contains example hyperparameter sweep script for `GraphLRCN`
+  training and testing
 
-More instructions are found in READMEs of each subfolder
+(neural-network)
+- `ffnn_15_30_node.py` - 
+- `ffnn_300_600_node.py` - 
+
+(random-forest)
+- `gradientboost.py` -
+- `random_forest.py` - 
 
 ### simulation-data
 
+(main)
+- `firefly.py` - 
+- `greenberghastings.py` - 
+- `kuramoto.py` - 
+- `generate_graph_dynamics_pain.py` - 
 
+(LRCN-datagen)
+- `OmegaDynamicsKURA.py` -
+- `OmegaFCA.py` - 
+- `OmegaGH.py` - 
 
-## Instructions for Running L2PSync
+(subgraphs-datagen)
+- `large_graph_generator.py` - 
+- `NNetworkcop.py` - 
+- `random_subgraph_generator.py` - 
 
+For further inquiries email:
 
