@@ -56,7 +56,7 @@ def time_format(seconds):
 # --------------------------- #
 # Color list NNetwork extension
 # --------------------------- #
-class ColorNNetwork(NNetwork.NNetwork):
+class ColorNNetwork(NNetwork):
     
     """
     Specific case of NNetwork, 
@@ -109,7 +109,8 @@ class ColorNNetwork(NNetwork.NNetwork):
 # Kuramoto Implementation 
 # --------------------------- #
 def simulate_Kuramoto(G, K, T=10000, step=0.05, kappa=5, verbose=True,  
-            timesec=30, gifduration=200, intrinsic=True, fixed=0, rounded=False):
+            timesec=30, gifduration=200, intrinsic=True, fixed=0, rounded=False,
+            widthcheck=False):
     """
     Function that returns edgelist color changes for FCA
     Useful for visualization
@@ -139,16 +140,20 @@ def simulate_Kuramoto(G, K, T=10000, step=0.05, kappa=5, verbose=True,
                 )
         new = F.get_color(vertex) + step * fprime
         #if np.abs(new) > np.pi:
-        #    return np.mod(new, 2*np.pi)
+        #    return np.mod(new, np.pi)
         if np.abs(new) > np.pi:
-            return np.mod(new, 2*np.pi)
+            if new > np.pi:
+                return new-2*np.pi
+            if new < -np.pi:
+                return 2*np.pi+new
         return new
 
     # update to number of states 
     def disretize(vertices):
         return np.round(vertices,1) * 10
 
-    its = int(T/step)
+    its = int(126); verbose = False
+    #print(its,'================================')
     current_colors = [F.get_colors()]
     for i in trange(its, disable=not verbose):
         new_col = np.fromiter(map(euler_update, range(0,F.num_nodes())), float)
@@ -159,11 +164,25 @@ def simulate_Kuramoto(G, K, T=10000, step=0.05, kappa=5, verbose=True,
             mapped = np.digitize(new_col, bins)
             current_colors.append(mapped)
         else:
-            current_colors.append(np.mod(new_col, 2*np.pi))
+            current_colors.append(new_col)
+        if widthcheck:
+            a = widthkura(new_col)
+            #if 1: print(a,i,'--')
+            if a < np.pi - step:
+                if verbose: print(new_col)
+                return (current_colors, 1, i)
+        else:
+            if all(current_colors[-1]==current_colors[-1][0]):
+                return (current_colors, 1, i)
 
-    if all(current_colors[-1]==current_colors[-1][0]):
-        return (np.stack(current_colors,axis=0), 1)
-    return (np.stack(current_colors,axis=0), 0)
+    if widthcheck:
+        if widthkura(new_col) < np.pi:
+            if verbose: print(new_col)
+            return (current_colors, 1, i)
+    else:
+        if all(current_colors[-1]==current_colors[-1][0]):
+            return (current_colors, 1, i)
+    return (current_colors, 0, its)
 
 
 # ----------------------------#
@@ -285,13 +304,15 @@ def gifmake(frames, name, pickcol=False,kappa=False, duration=125):
             append_images=tail, optimize=False, duration=duration, loop=0)
 
 
-def width(colors, kappa):
+def widthkura(colors):
     """
     computes width from a color list
     """
-    ordered = list(set(colors)) 
+    #print(colors)
+    ordered = list(np.pi - colors); ordered.sort()
     lordered = len(ordered)
-    threshold = floor(kappa/2)
+    #print(ordered)
+    threshold = np.pi
     if ordered == 0:
         assert("Empty array or logic error.")
 
@@ -301,15 +322,20 @@ def width(colors, kappa):
     elif lordered == 2:
         dw = ordered[1]-ordered[0]
         if dw > threshold:
-            return kappa - dw
+            return 2*np.pi - dw
         else:
             return dw
 
     else:
-        widths = [ordered[-1]-ordered[0]]
+        widths = [2*np.pi+ordered[0]-ordered[-1]]
         for i in range(lordered-1):
             widths.append(ordered[i+1]-ordered[i])
-        return kappa - max(widths)
+        #print(min(widths),'------')
+        return np.abs(2*np.pi - max(widths))
+
+#colorlist = np.random.uniform(-np.pi,np.pi,15)
+#print(list(set(colorlist)))
+#print(widthkura(colorlist))
 
 def lattice2D_mkgif(colors_it, n, name="Lattice2D",
         freeze=False, cap=1000, duration=100,pickcol=0):
