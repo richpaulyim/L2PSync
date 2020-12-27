@@ -2,7 +2,6 @@
 
 This is the repository for the paper "Learning to Predict Synchronization of
 Coupled Oscillators on Heterogeneous Graphs" by Hardeep Bassi, Richard Yim, Joshua Vendrow, Rohith Koduluka, Cherlin Zhu and Hanbaek Lyu.
-![image](https://user-images.githubusercontent.com/59981298/103162150-a9435100-47a1-11eb-9e94-2e951f84cb5c.png)
 
 ![image](https://user-images.githubusercontent.com/59981298/103162146-887afb80-47a1-11eb-8230-8a72291306b7.png)
 
