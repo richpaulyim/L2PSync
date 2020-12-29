@@ -7,12 +7,12 @@ Coupled Oscillators on Heterogeneous Graphs" by Hardeep Bassi, Richard Yim, Josh
 
 # Paper 
 
-https://arxiv.org/abs/2012.14048
+** https://arxiv.org/abs/2012.14048 **
 
 <p align="center">
 <img width="400" src="https://github.com/richpaulyim/L2PSync/blob/master/simulation-data/spintreek8_everykappa_31.gif" alt="logo">
 </p>
-Figure of firefly cellular automata (FCA) on 31^3 lattice for 8 coloring iterating until synchronization.
+(Figure of firefly cellular automata (FCA) on 31^3 lattice for 8 coloring iterating until synchronization.)
 
 # Included Folders 
 ## ml-models
