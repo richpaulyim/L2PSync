@@ -5,6 +5,9 @@ Coupled Oscillators on Heterogeneous Graphs" by Hardeep Bassi, Richard Yim, Josh
 
 ![image](https://user-images.githubusercontent.com/59981298/103162146-887afb80-47a1-11eb-8230-8a72291306b7.png)
 
+# Paper 
+
+https://arxiv.org/abs/2012.14048
 
 # Included Folders 
 
