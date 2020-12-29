@@ -55,7 +55,7 @@ instructions below)
 - `random_subgraph_generator.py` - Script for generating random
   induced-subgraphs-induced-dynamics data
 
-## Instructions for Generating Graph-Initial-Dynamics Pairs
+## Instructions for Generating Graph and Initial-Dynamics Pairs
 
 1. Lines 20-24: insert sync/nonsync limits. `AMOUNT_ITS` is the number of
    dynamics iterations to be recorded. `ACCESS_KEY` and `SECRET_KEY` are the AWS
