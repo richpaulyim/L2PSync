@@ -13,6 +13,7 @@ https://arxiv.org/abs/2012.14048
 <img width="400" src="https://github.com/richpaulyim/L2PSync/blob/master/simulation-data/spintreek8_everykappa_31.gif" alt="logo">
 </p>
 Figure of firefly cellular automata (FCA) on 31^3 lattice for 8 coloring iterating until synchronization.
+
 # Included Folders 
 ## ml-models
 
