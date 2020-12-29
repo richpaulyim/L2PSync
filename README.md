@@ -11,6 +11,10 @@ https://arxiv.org/abs/2012.14048
 
 # Included Folders 
 
+<p align="center">
+<img width="400" src="https://github.com/richpaulyim/L2PSync/blob/master/simulation-data/spintreek8_everykappa_31.gif" alt="logo">
+</p>
+
 ## ml-models
 
 (graph-lrcn)
